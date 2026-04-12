@@ -1,0 +1,114 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "GiveReady",
+  "logo": {
+    "dark": "/images/logo-dark.svg",
+    "light": "/images/logo-light.svg"
+  },
+  "favicon": "/images/favicon.png",
+  "colors": {
+    "primary": "#10B981",
+    "light": "#34D399",
+    "dark": "#059669"
+  },
+  "topbar": {
+    "links": [
+      {
+        "name": "giveready.org",
+        "url": "https://giveready.org"
+      }
+    ],
+    "cta": {
+      "name": "Onboard Your Nonprofit",
+      "url": "https://giveready.org/onboard"
+    }
+  },
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/gswardman/giveready"
+    }
+  ],
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Getting Started",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "how-it-works",
+              "quickstart"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "API Reference",
+            "pages": [
+              "api/overview",
+              "api/search",
+              "api/nonprofits",
+              "api/causes",
+              "api/donations",
+              "api/stats"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MCP",
+        "groups": [
+          {
+            "group": "MCP",
+            "pages": [
+              "mcp/introduction",
+              "mcp/tools",
+              "mcp/connecting",
+              "mcp/examples"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "For AI Agents",
+        "groups": [
+          {
+            "group": "For AI Agents",
+            "pages": [
+              "for-agents/discovery",
+              "for-agents/verification",
+              "for-agents/donating",
+              "for-agents/safety"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "For Nonprofits",
+        "groups": [
+          {
+            "group": "For Nonprofits",
+            "pages": [
+              "for-nonprofits/onboarding",
+              "for-nonprofits/your-page",
+              "for-nonprofits/wallet-setup",
+              "for-nonprofits/governance"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/gswardman/giveready"
+    }
+  }
+}

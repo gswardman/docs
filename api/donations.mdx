@@ -1,0 +1,105 @@
+---
+title: Donations
+description: Make donations via x402 and view donation history
+---
+
+# Donations
+
+## Initiate Donation (x402)
+
+`GET /api/donate/{slug}?amount={amount}`
+
+Returns HTTP 402 with x402 payment instructions. This is the standard HTTP payment flow — the agent receives payment details and must sign a USDC transaction on Solana.
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `slug` | string | The nonprofit's URL slug |
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `amount` | number | Yes | Donation amount in USDC |
+
+### Example
+
+```bash
+curl "https://giveready.org/api/donate/city-kids-surfing?amount=50"
+```
+
+### Response (HTTP 402)
+
+```json
+{
+  "x402": true,
+  "recipient": "<solana_wallet_address>",
+  "amount": 50,
+  "currency": "USDC",
+  "network": "solana",
+  "nonprofit": "City Kids Surfing",
+  "slug": "city-kids-surfing"
+}
+```
+
+---
+
+## Submit Donation
+
+`POST /api/donate/{slug}`
+
+Submit a signed USDC transaction to complete the donation. The transaction must be a valid Solana transaction sending the specified USDC amount to the nonprofit's wallet.
+
+### Request Body
+
+```json
+{
+  "tx_signature": "<signed_solana_transaction_hash>"
+}
+```
+
+### Response (HTTP 200)
+
+```json
+{
+  "success": true,
+  "donation_id": "d-abc123",
+  "nonprofit": "City Kids Surfing",
+  "amount": 50,
+  "currency": "USDC",
+  "tx_signature": "<transaction_hash>"
+}
+```
+
+---
+
+## Donation History
+
+`GET /api/donations/{slug}`
+
+Returns the donation history for a nonprofit.
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `slug` | string | The nonprofit's URL slug |
+
+### Example
+
+```bash
+curl "https://giveready.org/api/donations/city-kids-surfing"
+```
+
+## How x402 Works
+
+The x402 protocol uses standard HTTP status codes for payments:
+
+1. **Agent requests donation** → `GET /api/donate/{slug}?amount=50`
+2. **Server returns 402** → payment instructions with wallet address, amount, network
+3. **Agent signs transaction** → creates a Solana USDC transfer to the wallet
+4. **Agent submits proof** → `POST /api/donate/{slug}` with the transaction signature
+5. **Server verifies and records** → confirms the transaction on-chain and logs the donation
+
+No API keys. No accounts. No intermediaries. The agent handles the payment directly on Solana, and GiveReady verifies it happened.

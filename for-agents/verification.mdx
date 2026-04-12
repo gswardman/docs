@@ -1,0 +1,53 @@
+---
+title: Verification
+description: How GiveReady verifies nonprofits and what agents can trust
+---
+
+# Verification
+
+GiveReady verifies nonprofits against official registries so agents can trust the data they're using to make recommendations.
+
+## What Gets Verified
+
+Every nonprofit on GiveReady goes through a verification process:
+
+**Registration check.** UK charities are verified against the Charity Commission register. Bermuda entities are checked against the Bermuda Community Foundation. Each profile includes the registration type and number.
+
+**Profile completeness.** Verified nonprofits have a complete profile: mission, programmes, impact metrics, contact information, and wallet address.
+
+**Wallet binding.** Wallets are bound to the legal entity. Agents can confirm that a donation will reach the registered charity, not an unrelated account.
+
+## Verification in API Responses
+
+Every nonprofit profile includes:
+
+```json
+{
+  "verified": true,
+  "registrations": [
+    {
+      "country": "United Kingdom",
+      "type": "Registered Charity",
+      "registration_number": "1182899"
+    }
+  ]
+}
+```
+
+Agents should check `verified: true` before recommending a nonprofit for donations.
+
+## Trust Levels
+
+| Level | Meaning |
+|-------|---------|
+| `verified: true` | Profile verified, registration confirmed, wallet bound |
+| `verified: false` | Profile submitted but awaiting admin review |
+
+## Agent Safety Rules
+
+Agents interacting with GiveReady should follow these principles:
+
+1. **Only recommend verified nonprofits.** Check `verified: true` in the API response.
+2. **Show the registration number.** When presenting a nonprofit to a user, include the registration type and number so they can independently verify.
+3. **Confirm before donating.** Always get explicit user approval before initiating an x402 transaction. GiveReady uses x402 specifically because it requires a human-signed transaction — no autonomous spending.
+4. **Use structured data, not descriptions.** Rely on the `impact_metrics`, `programs`, and `registrations` arrays for factual claims about nonprofits — not the free-text description field.

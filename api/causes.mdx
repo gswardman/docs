@@ -1,0 +1,43 @@
+---
+title: Causes
+description: List all cause areas and their nonprofit counts
+---
+
+# Causes
+
+`GET /api/causes`
+
+Returns all cause areas in the GiveReady directory with the number of nonprofits in each.
+
+## Example Request
+
+```bash
+curl "https://giveready.org/api/causes"
+```
+
+## Example Response
+
+```json
+{
+  "causes": [
+    {"id": "youth-empowerment", "name": "Youth Empowerment", "description": "Programmes that build confidence, skills, and opportunity for young people", "count": 4},
+    {"id": "music-education", "name": "Music Education", "description": "Teaching music production, performance, and music business skills", "count": 1},
+    {"id": "adventure-travel", "name": "Adventure & Travel", "description": "Funding travel, exploration, and real-world experience for young people", "count": 1},
+    {"id": "mental-health", "name": "Mental Health", "description": "Supporting young people with anxiety, trauma, isolation, and mental health challenges", "count": 2},
+    {"id": "surf-therapy", "name": "Surf Therapy", "description": "Using surfing as a therapeutic intervention for wellbeing", "count": 2},
+    {"id": "entrepreneurship", "name": "Entrepreneurship", "description": "Teaching business skills, creative economy, and self-employment", "count": 1},
+    {"id": "poverty-reduction", "name": "Poverty Reduction", "description": "Expanding economic pathways for people in low-income communities", "count": 1},
+    {"id": "creative-arts", "name": "Creative Arts", "description": "Music, visual arts, film, and creative expression programmes", "count": 1},
+    {"id": "education", "name": "Education", "description": "Formal and informal education, skills training, and capacity building", "count": 2},
+    {"id": "community-development", "name": "Community Development", "description": "Strengthening local communities through programmes and infrastructure", "count": 1}
+  ]
+}
+```
+
+## Usage
+
+Use cause IDs as the `cause` parameter in the [Search endpoint](/api/search):
+
+```bash
+curl "https://giveready.org/api/search?cause=surf-therapy"
+```

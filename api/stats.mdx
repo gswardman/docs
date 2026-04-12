@@ -1,0 +1,47 @@
+---
+title: Stats
+description: Directory statistics and query volume
+---
+
+# Stats
+
+`GET /api/stats`
+
+Returns aggregate statistics about the GiveReady directory.
+
+## Example Request
+
+```bash
+curl "https://giveready.org/api/stats"
+```
+
+## Example Response
+
+```json
+{
+  "nonprofits": 162,
+  "countries": 3,
+  "causes": 10,
+  "total_beneficiaries": 1570,
+  "total_donations": 0,
+  "queries": {
+    "llms_txt": 234,
+    "agents_md": 189,
+    "ai_plugin": 67,
+    "mcp": 312
+  }
+}
+```
+
+## Fields
+
+| Field | Description |
+|-------|-------------|
+| `nonprofits` | Total verified nonprofits in the directory |
+| `countries` | Number of countries represented |
+| `causes` | Number of cause areas |
+| `total_beneficiaries` | Sum of annual beneficiaries across all nonprofits |
+| `total_donations` | Total donation transactions recorded |
+| `queries` | Hit counters for each AI discovery endpoint |
+
+The `queries` object tracks how many times each agent discovery file has been accessed, giving visibility into which AI systems are discovering GiveReady.

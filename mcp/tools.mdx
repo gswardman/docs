@@ -1,0 +1,78 @@
+---
+title: Available Tools
+description: MCP tools exposed by the GiveReady server
+---
+
+# Available Tools
+
+The GiveReady MCP server exposes 3 tools and 1 resource.
+
+## search_nonprofits
+
+Search for nonprofits by keyword, cause area, country, or alignment.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `q` | string | No | Keyword search |
+| `cause` | string | No | Filter by cause slug |
+| `country` | string | No | Filter by country |
+| `ghd_aligned` | boolean | No | Filter for GHD-aligned orgs |
+
+### Example
+
+```
+Agent: "Find youth charities in South Africa"
+→ search_nonprofits({country: "South Africa", cause: "youth-empowerment"})
+```
+
+### Available Causes
+
+`youth-empowerment`, `music-education`, `adventure-travel`, `mental-health`, `surf-therapy`, `entrepreneurship`, `poverty-reduction`, `creative-arts`, `education`, `community-development`
+
+### Available Countries
+
+`South Africa`, `United Kingdom`, `Bermuda` (growing)
+
+---
+
+## get_nonprofit
+
+Get the full profile for a specific nonprofit, including programmes, impact metrics, and wallet address.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `slug` | string | Yes | The nonprofit's URL slug |
+
+### Example
+
+```
+Agent: "Tell me about City Kids Surfing"
+→ get_nonprofit({slug: "city-kids-surfing"})
+```
+
+Returns: name, mission, description, programmes, impact metrics, registrations, wallet address, donation links.
+
+---
+
+## list_causes
+
+List all cause areas with descriptions and nonprofit counts. No parameters.
+
+### Example
+
+```
+Agent: "What cause areas does GiveReady cover?"
+→ list_causes()
+```
+
+---
+
+## Resource: directory-stats
+
+URI: `giveready://stats`
+
+Returns directory statistics: total nonprofits, countries, causes, beneficiaries, and query volume by discovery channel.

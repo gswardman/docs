@@ -1,0 +1,114 @@
+---
+title: Nonprofits
+description: List and retrieve nonprofit profiles
+---
+
+# Nonprofits
+
+## List All Nonprofits
+
+`GET /api/nonprofits`
+
+Returns all verified nonprofits in the directory, paginated.
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `limit` | integer | No | Results per page (default: 20, max: 100) |
+| `offset` | integer | No | Pagination offset |
+
+### Example
+
+```bash
+curl "https://giveready.org/api/nonprofits?limit=10"
+```
+
+---
+
+## Get Nonprofit Profile
+
+`GET /api/nonprofits/{slug}`
+
+Returns the full profile for a single nonprofit, including programmes, impact metrics, registrations, and wallet address.
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `slug` | string | The nonprofit's URL slug (e.g., `city-kids-surfing`) |
+
+### Example Request
+
+```bash
+curl "https://giveready.org/api/nonprofits/city-kids-surfing"
+```
+
+### Example Response
+
+```json
+{
+  "id": "city-kids-surfing",
+  "slug": "city-kids-surfing",
+  "name": "City Kids Surfing",
+  "tagline": "Getting city kids into the ocean",
+  "mission": "City Kids Surfing takes young people from urban environments into the sea — using surfing as a tool for building confidence, resilience, and mental wellbeing.",
+  "description": "Founded in 2017 by Joe Taylor, City Kids Surfing runs an annual surf trip and year-round mentoring programme for around 30 young people from urban communities...",
+  "website": "https://getcitykidssurfing.com",
+  "country": "United Kingdom",
+  "city": "London",
+  "region": "England",
+  "founded_year": 2017,
+  "annual_budget_usd": 50000,
+  "team_size": 5,
+  "beneficiaries_per_year": 30,
+  "verified": true,
+  "causes": [
+    {"id": "youth-empowerment", "name": "Youth Empowerment"},
+    {"id": "mental-health", "name": "Mental Health"},
+    {"id": "surf-therapy", "name": "Surf Therapy"}
+  ],
+  "programs": [
+    {
+      "name": "Annual Surf Trip",
+      "description": "Multi-day residential surf trip taking young people from the city to the coast.",
+      "beneficiaries_per_year": 30,
+      "location": "UK coast"
+    },
+    {
+      "name": "Mentoring Programme",
+      "description": "Year-round one-to-one mentoring for young people.",
+      "beneficiaries_per_year": 30,
+      "location": "London"
+    }
+  ],
+  "impact_metrics": [
+    {"name": "Young people supported annually", "value": "30", "unit": "young people", "period": "annual"},
+    {"name": "Years operating", "value": "8", "unit": "years", "period": "cumulative"}
+  ],
+  "registrations": [
+    {"country": "United Kingdom", "type": "Registered Charity", "registration_number": "1182899"}
+  ],
+  "donate_url": "https://giveready.org/donate/city-kids-surfing"
+}
+```
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `slug` | string | URL-friendly identifier |
+| `name` | string | Organisation name |
+| `tagline` | string | Short description |
+| `mission` | string | Mission statement |
+| `description` | string | Detailed description |
+| `website` | string | Organisation website |
+| `country` | string | Country of operation |
+| `causes` | array | Associated cause areas |
+| `programs` | array | Active programmes with beneficiary counts |
+| `impact_metrics` | array | Quantified impact data |
+| `registrations` | array | Official registrations with numbers |
+| `usdc_wallet` | string | Solana USDC wallet address (if set) |
+| `verified` | boolean | Whether the profile has been verified |
+| `donate_url` | string | Direct donation page URL |

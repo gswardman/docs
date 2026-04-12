@@ -1,0 +1,76 @@
+---
+title: Donating via x402
+description: How agents initiate and complete USDC donations
+---
+
+# Donating via x402
+
+GiveReady uses the x402 protocol for donations — an HTTP-native payment standard where the server returns a 402 Payment Required response with instructions, and the agent signs a transaction to complete it.
+
+## Why x402
+
+Traditional donation flows require form submissions, payment processors, and human-facing checkout pages. Agents can't navigate those. x402 turns donation into an API call: request payment instructions, sign a transaction, submit proof. Done.
+
+**Zero fees.** 100% of the USDC reaches the nonprofit's wallet. No payment processor, no platform cut, no gas abstraction fee.
+
+**Direct settlement.** Funds go from the donor's wallet to the nonprofit's wallet on Solana. No intermediary holds funds.
+
+**Human-signed.** x402 requires a human-signed transaction. Agents cannot spend autonomously — the donor must approve.
+
+## The Flow
+
+### Step 1: Request Payment Instructions
+
+```bash
+GET /api/donate/city-kids-surfing?amount=50
+```
+
+Response (HTTP 402):
+```json
+{
+  "x402": true,
+  "recipient": "J4F3RwWiCnAvyeMqnrxMb7RC8CVg2kk8VyPFfzbfn3CH",
+  "amount": 50,
+  "currency": "USDC",
+  "network": "solana",
+  "nonprofit": "City Kids Surfing",
+  "slug": "city-kids-surfing"
+}
+```
+
+### Step 2: Sign the Transaction
+
+The agent (or the donor's wallet) creates a Solana transaction sending the specified USDC amount to the recipient address. This transaction must be signed by the donor.
+
+### Step 3: Submit Proof
+
+```bash
+POST /api/donate/city-kids-surfing
+Content-Type: application/json
+
+{
+  "tx_signature": "5UfDuX..."
+}
+```
+
+Response (HTTP 200):
+```json
+{
+  "success": true,
+  "donation_id": "d-abc123",
+  "nonprofit": "City Kids Surfing",
+  "amount": 50,
+  "currency": "USDC",
+  "tx_signature": "5UfDuX..."
+}
+```
+
+## For Agent Developers
+
+If you're building an agent that integrates with GiveReady donations:
+
+1. **Search first.** Use the search or MCP tools to find a nonprofit. Don't hardcode slugs.
+2. **Present the nonprofit to the user.** Show name, mission, registration, and impact data before asking to donate.
+3. **Get explicit approval.** The user must confirm the amount and recipient.
+4. **Handle 402 responses.** Your agent framework needs to recognise HTTP 402 as a payment request, not an error.
+5. **USDC on Solana.** The donor needs a Solana wallet with USDC. Phantom and Coinbase Wallet are the most common.

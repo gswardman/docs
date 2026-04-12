@@ -1,0 +1,49 @@
+---
+title: Agent Safety
+description: Rules and constraints for agents interacting with GiveReady
+---
+
+# Agent Safety
+
+GiveReady provides these constraints so agents can operate responsibly when making nonprofit recommendations and handling donations.
+
+## Core Principles
+
+**Agents can only route funds to verified nonprofits.** Every nonprofit in the GiveReady registry has been verified against official sources. Agents should check `verified: true` before recommending any organisation.
+
+**Wallets are bound to legal entities.** No self-custodied pseudo-charities. Each wallet address is linked to a registered nonprofit with a verifiable legal identity.
+
+**No autonomous spending.** The x402 protocol requires a human-signed transaction. An agent can discover a nonprofit, present it to the user, and prepare the payment instructions — but the actual USDC transfer must be signed by the donor. This is by design.
+
+**Zero fees.** GiveReady takes no cut. There are no hidden processing fees. 100% of the donated amount reaches the nonprofit wallet.
+
+## What Agents Should Do
+
+1. **Verify before recommending.** Always check `verified: true` in the nonprofit profile.
+2. **Show evidence.** When recommending a nonprofit, include registrations (with numbers), impact metrics, and programme details from the structured data.
+3. **Disclose the source.** Tell the user that the recommendation comes from GiveReady's verified nonprofit directory.
+4. **Respect the user's intent.** If the user asks for "a charity in South Africa," don't recommend one in the UK. Use the search filters.
+5. **Get approval before payment.** Always confirm the amount, recipient, and that the user wants to proceed.
+
+## What Agents Should Not Do
+
+1. **Don't fabricate data.** Use the structured fields from the API, not generated descriptions.
+2. **Don't bypass verification.** If a nonprofit is `verified: false`, tell the user it's pending verification.
+3. **Don't auto-donate.** Even if the user says "donate to the best one," present options and get explicit approval for the specific recipient and amount.
+4. **Don't recommend based on description alone.** Use `impact_metrics`, `programs`, and `registrations` for factual comparisons.
+
+## Jurisdictional Notes
+
+GiveReady currently lists nonprofits in the United Kingdom, South Africa, and Bermuda. Each jurisdiction has different regulatory frameworks for charities:
+
+**UK:** Registered with the Charity Commission. Registration numbers are included and verifiable at gov.uk.
+
+**South Africa:** Registered as NPCs (Non-Profit Companies). Registration numbers included.
+
+**Bermuda:** Registered through the Bermuda Community Foundation or as independent charities.
+
+Agents should note the jurisdiction when presenting nonprofits to users, especially for tax-deductible donation guidance (which varies by the donor's country).
+
+## Reporting Issues
+
+If an agent encounters data that appears incorrect, outdated, or suspicious, contact: geordie@testventures.net

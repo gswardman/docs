@@ -1,0 +1,57 @@
+---
+title: Examples
+description: Real-world MCP usage examples
+---
+
+# Examples
+
+## Find and Donate to a Surf Therapy Charity
+
+**User prompt:** "I want to donate $50 to a surf therapy charity in the UK"
+
+**Agent flow:**
+1. Calls `search_nonprofits({cause: "surf-therapy", country: "United Kingdom"})`
+2. Returns City Kids Surfing and The Wave Project
+3. Agent presents options with impact data
+4. User selects City Kids Surfing
+5. Agent calls REST API: `GET /api/donate/city-kids-surfing?amount=50`
+6. Receives x402 payment instructions
+7. Signs and submits USDC transaction
+
+## Research Nonprofits by Impact
+
+**User prompt:** "Which youth charities serve the most beneficiaries?"
+
+**Agent flow:**
+1. Calls `search_nonprofits({cause: "youth-empowerment"})`
+2. Compares `beneficiaries_per_year` across results
+3. For the top result, calls `get_nonprofit({slug: "bridges-for-music"})`
+4. Returns detailed impact metrics: 250 students trained, 250 job placements annually
+
+## Explore the Directory
+
+**User prompt:** "What types of nonprofits are on GiveReady?"
+
+**Agent flow:**
+1. Calls `list_causes()`
+2. Returns all 10 cause areas with descriptions and counts
+3. Agent summarises: "GiveReady covers youth empowerment, surf therapy, music education, mental health, and more across 162+ nonprofits in 3 countries."
+
+## Build a Giving Portfolio
+
+**User prompt:** "I want to split $200 across three different youth charities"
+
+**Agent flow:**
+1. Calls `search_nonprofits({cause: "youth-empowerment"})`
+2. Returns multiple nonprofits across different countries
+3. Agent recommends a balanced portfolio: Bridges for Music (SA), City Kids Surfing (UK), WEF (Bermuda)
+4. Initiates three separate x402 donations of ~$67 each
+
+## Verify a Charity Before Donating
+
+**User prompt:** "Is City Kids Surfing a real registered charity?"
+
+**Agent flow:**
+1. Calls `get_nonprofit({slug: "city-kids-surfing"})`
+2. Checks `registrations` array: UK Charity Commission #1182899
+3. Confirms: "Yes, City Kids Surfing is registered with the UK Charity Commission (1182899), founded in 2017, supporting 30 young people annually."

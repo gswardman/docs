@@ -1,0 +1,71 @@
+---
+title: Search Nonprofits
+description: Find nonprofits by keyword, cause area, or country
+---
+
+# Search Nonprofits
+
+`GET /api/search`
+
+Search the GiveReady directory for verified nonprofits matching your criteria.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `q` | string | No | Keyword search across name, mission, and description |
+| `cause` | string | No | Filter by cause area slug (e.g., `surf-therapy`, `youth-empowerment`) |
+| `country` | string | No | Filter by country name (e.g., `United Kingdom`, `South Africa`) |
+| `ghd_aligned` | boolean | No | Filter for Global Health Discovery aligned organisations |
+| `limit` | integer | No | Results per page (default: 20, max: 50) |
+| `offset` | integer | No | Pagination offset |
+
+At least one of `q`, `cause`, or `country` should be provided for meaningful results.
+
+## Example Request
+
+```bash
+curl "https://giveready.org/api/search?q=surfing&country=United%20Kingdom"
+```
+
+## Example Response
+
+```json
+{
+  "results": [
+    {
+      "id": "city-kids-surfing",
+      "slug": "city-kids-surfing",
+      "name": "City Kids Surfing",
+      "tagline": "Getting city kids into the ocean",
+      "mission": "City Kids Surfing takes young people from urban environments into the sea — using surfing as a tool for building confidence, resilience, and mental wellbeing.",
+      "country": "United Kingdom",
+      "city": "London",
+      "causes": ["youth-empowerment", "mental-health", "surf-therapy"],
+      "beneficiaries_per_year": 30,
+      "verified": true,
+      "donate_url": "https://giveready.org/donate/city-kids-surfing"
+    }
+  ],
+  "total": 1,
+  "limit": 20,
+  "offset": 0
+}
+```
+
+## Available Cause Slugs
+
+Use these values for the `cause` parameter:
+
+| Slug | Name |
+|------|------|
+| `youth-empowerment` | Youth Empowerment |
+| `music-education` | Music Education |
+| `adventure-travel` | Adventure & Travel |
+| `mental-health` | Mental Health |
+| `surf-therapy` | Surf Therapy |
+| `entrepreneurship` | Entrepreneurship |
+| `poverty-reduction` | Poverty Reduction |
+| `creative-arts` | Creative Arts |
+| `education` | Education |
+| `community-development` | Community Development |

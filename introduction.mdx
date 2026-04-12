@@ -1,0 +1,47 @@
+---
+title: Introduction
+description: The giving rails for AI agents and the nonprofits they fund
+---
+
+# GiveReady
+
+GiveReady is open infrastructure that makes small nonprofits discoverable and payable by AI agents. One link gives each nonprofit a verified profile, a donation page, and a machine-readable identity that any AI assistant can find and fund.
+
+## What GiveReady Does
+
+GiveReady solves a simple problem: AI agents that want to help someone donate to a youth charity in South Africa, or a surf therapy programme in the UK, have no reliable way to discover verified nonprofits or send them money. GiveReady provides that layer.
+
+For **AI agents and developers**, GiveReady offers a structured API, an MCP server, and x402 payment endpoints. Agents can search nonprofits by cause, geography, or impact data, verify their registration status, and initiate USDC donations — all in a single call.
+
+For **nonprofits**, GiveReady provides a free donation page that goes live in minutes. No fees, no intermediary. Donations flow directly to the nonprofit's wallet. And because the profile is structured and machine-readable, AI agents worldwide can recommend the nonprofit to potential donors.
+
+## Why It Matters
+
+The next wave of charitable giving won't come from donor portals or crowdfunding pages. It will come from AI agents acting on behalf of people who say things like "find me a good youth charity" or "donate $50 to surf therapy in the UK." GiveReady makes sure small nonprofits aren't invisible to those agents.
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Get up and running in 5 minutes
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/overview">
+    Search, discover, and donate via REST
+  </Card>
+  <Card title="MCP Server" icon="plug" href="/mcp/introduction">
+    Connect AI agents via Model Context Protocol
+  </Card>
+  <Card title="For Nonprofits" icon="heart" href="/for-nonprofits/onboarding">
+    Get your charity on GiveReady
+  </Card>
+</CardGroup>
+
+## At a Glance
+
+| | |
+|---|---|
+| **Nonprofits listed** | 162+ verified youth nonprofits |
+| **Fees** | Zero. 100% of donations reach the nonprofit |
+| **Payment** | USDC on Solana via x402 protocol |
+| **Agent access** | MCP server, REST API, OpenAPI spec, llms.txt |
+| **Discovery** | By cause, country, keyword, impact metrics |
+| **Registry** | `io.github.gswardman/giveready` on MCP registry |
+| **npm** | `npx giveready-mcp` |

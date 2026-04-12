@@ -1,0 +1,52 @@
+---
+title: Your Donation Page
+description: How your GiveReady donation page works
+---
+
+# Your Donation Page
+
+Every nonprofit on GiveReady gets a dedicated donation page at:
+
+```
+https://giveready.org/donate/your-charity-slug
+```
+
+## What Donors See
+
+Your page displays your charity's mission, programmes, impact metrics, and a donate button. Donors can send USDC using:
+
+- **QR code** — scan with Phantom or Coinbase Wallet
+- **Wallet deeplink** — opens the donor's mobile wallet directly
+- **Copy address** — for manual transfers from any Solana wallet
+
+## What AI Agents See
+
+The same data that appears on your donation page is available as structured JSON through the API:
+
+```bash
+curl https://giveready.org/api/nonprofits/your-charity-slug
+```
+
+This returns your full profile — mission, programmes, impact metrics, registrations, and wallet address — in a format any AI agent can parse and recommend.
+
+## Sharing Your Page
+
+Your donation page link works everywhere:
+
+- Add it to your email signature
+- Share on social media
+- Put it in your newsletter
+- Add it to your website alongside existing donate buttons
+- Include in grant applications as a live proof of concept
+
+## Embed Widget
+
+GiveReady also provides an embeddable donate widget you can add to your own website:
+
+```html
+<script src="https://giveready.org/widget/donate.js"
+        data-nonprofit="your-charity-slug">
+</script>
+```
+
+This adds a donate button to any page. When clicked, it generates a Solana Pay QR code or deeplink for the donor's wallet. Zero dependencies, 21KB.

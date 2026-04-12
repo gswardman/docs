@@ -1,0 +1,59 @@
+---
+title: API Overview
+description: RESTful API for nonprofit discovery, search, and donations
+---
+
+# API Overview
+
+The GiveReady API is a public REST API hosted on Cloudflare Workers. No authentication is required for read operations. All responses are JSON.
+
+**Base URL:** `https://giveready.org`
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/search` | Search nonprofits by keyword, cause, or country |
+| `GET` | `/api/nonprofits` | List all verified nonprofits (paginated) |
+| `GET` | `/api/nonprofits/{slug}` | Get full nonprofit profile |
+| `GET` | `/api/causes` | List all cause areas with counts |
+| `GET` | `/api/stats` | Directory statistics |
+| `GET` | `/api/donate/{slug}` | Get x402 payment instructions |
+| `POST` | `/api/donate/{slug}` | Submit signed donation transaction |
+| `GET` | `/api/donations/{slug}` | Donation history for a nonprofit |
+
+## Authentication
+
+**Read operations** (search, list, get) require no authentication. The API is public by design — agents need frictionless access to nonprofit data.
+
+**Donations** use the x402 HTTP payment protocol. No API key, but the agent must sign a USDC transaction on Solana.
+
+## Rate Limits
+
+Standard Cloudflare Workers limits apply. For typical agent usage (discovery, search, profile lookups), you won't hit limits. If you're building a high-volume integration, contact us.
+
+## Response Format
+
+All endpoints return JSON. Nonprofit profiles include structured fields for mission, programmes, impact metrics, registrations, wallet addresses, and cause mappings.
+
+## OpenAPI Spec
+
+The full OpenAPI 3.1.0 specification is available at:
+
+```
+https://giveready.org/openapi.json
+```
+
+Import this into Postman, Swagger UI, or any OpenAPI-compatible tool for interactive exploration.
+
+## Agent Discovery Files
+
+In addition to the REST API, GiveReady provides several files for AI agent discovery:
+
+| File | URL | Purpose |
+|------|-----|---------|
+| `llms.txt` | `giveready.org/llms.txt` | LLM crawler metadata |
+| `agents.md` | `giveready.org/agents.md` | Agent discovery guide |
+| `ai-plugin.json` | `giveready.org/.well-known/ai-plugin.json` | OpenAI plugin manifest |
+| `openapi.json` | `giveready.org/openapi.json` | OpenAPI specification |
+| MCP manifest | `giveready.org/mcp` | MCP server metadata |

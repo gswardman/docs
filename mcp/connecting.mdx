@@ -1,0 +1,76 @@
+---
+title: Connecting
+description: Connect GiveReady MCP to your AI agent or client
+---
+
+# Connecting
+
+## Claude Desktop
+
+Add to your Claude Desktop MCP configuration (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+
+```json
+{
+  "mcpServers": {
+    "giveready": {
+      "command": "npx",
+      "args": ["giveready-mcp"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop. You can now ask Claude about nonprofits, causes, and donations naturally.
+
+## Cursor
+
+Add to your Cursor MCP settings (`.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "giveready": {
+      "command": "npx",
+      "args": ["giveready-mcp"]
+    }
+  }
+}
+```
+
+## ChatGPT (via MCP bridge)
+
+If you're using an MCP-to-ChatGPT bridge, add GiveReady as a server:
+
+```json
+{
+  "command": "npx",
+  "args": ["giveready-mcp"]
+}
+```
+
+## n8n / LangChain / CrewAI
+
+For agent framework integrations, use the REST API directly:
+
+```python
+import requests
+
+# Search nonprofits
+response = requests.get("https://giveready.org/api/search", params={
+    "cause": "surf-therapy",
+    "country": "United Kingdom"
+})
+nonprofits = response.json()["results"]
+```
+
+## Verifying the Connection
+
+Once connected, test with a simple query:
+
+```
+"How many nonprofits are on GiveReady?"
+"Find youth charities that use surf therapy"
+"Tell me about Bridges for Music"
+```
+
+The agent should use the `search_nonprofits` or `get_nonprofit` tools and return structured data from the GiveReady directory.

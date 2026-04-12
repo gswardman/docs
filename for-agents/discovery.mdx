@@ -1,0 +1,72 @@
+---
+title: Discovery
+description: How AI agents find and index GiveReady
+---
+
+# Agent Discovery
+
+GiveReady is built for AI agents. Every part of the platform is designed to be discovered, understood, and used by autonomous systems.
+
+## Discovery Files
+
+GiveReady publishes four standard files that AI agents and crawlers use to discover the platform:
+
+### llms.txt
+
+```
+https://giveready.org/llms.txt
+```
+
+A plaintext file describing GiveReady's capabilities, endpoints, and data structure for LLM crawlers. This is the equivalent of robots.txt for AI agents.
+
+### agents.md
+
+```
+https://giveready.org/agents.md
+```
+
+A markdown guide written specifically for AI agents. Describes how to connect (MCP or REST), what data is available, and how to make donations.
+
+### ai-plugin.json
+
+```
+https://giveready.org/.well-known/ai-plugin.json
+```
+
+OpenAI plugin manifest for ChatGPT and compatible systems.
+
+### openapi.json
+
+```
+https://giveready.org/openapi.json
+```
+
+Full OpenAPI 3.1.0 specification. Import into any agent framework for automatic tool generation.
+
+## MCP Registry
+
+GiveReady is listed on the official MCP registry:
+
+```
+Registry name: io.github.gswardman/giveready
+npm package: giveready-mcp
+Install: npx giveready-mcp
+```
+
+Any MCP-compatible client (Claude, ChatGPT, Cursor) can discover and connect to GiveReady through the registry.
+
+## Hit Counters
+
+GiveReady tracks discovery queries across all four agent endpoints. Check current counts at:
+
+```bash
+curl https://giveready.org/api/stats
+```
+
+The `queries` object shows hits by channel: `llms_txt`, `agents_md`, `ai_plugin`, `mcp`.
+
+## Structured Data
+
+Every nonprofit profile returns structured JSON with standardised fields. Agents can reliably parse and compare: cause areas, geography, impact metrics (quantified), registration status, wallet addresses, and programme details.
+
+No scraping required. No HTML parsing. Just clean JSON.

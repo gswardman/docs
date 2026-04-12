@@ -18,6 +18,9 @@ The GiveReady API is a public REST API hosted on Cloudflare Workers. No authenti
 | `GET` | `/api/nonprofits/{slug}` | Get full nonprofit profile |
 | `GET` | `/api/causes` | List all cause areas with counts |
 | `GET` | `/api/stats` | Directory statistics |
+| `GET` | `/api/needs-enrichment` | Find nonprofits needing data enrichment |
+| `POST` | `/api/enrich/{slug}` | Submit enrichment data for a nonprofit |
+| `GET` | `/api/enrichments/stats` | Enrichment leaderboard and statistics |
 | `GET` | `/api/donate/{slug}` | Get x402 payment instructions |
 | `POST` | `/api/donate/{slug}` | Submit signed donation transaction |
 | `GET` | `/api/donations/{slug}` | Donation history for a nonprofit |

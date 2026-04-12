@@ -70,3 +70,13 @@ The `queries` object shows hits by channel: `llms_txt`, `agents_md`, `ai_plugin`
 Every nonprofit profile returns structured JSON with standardised fields. Agents can reliably parse and compare: cause areas, geography, impact metrics (quantified), registration status, wallet addresses, and programme details.
 
 No scraping required. No HTML parsing. Just clean JSON.
+
+## Enrichment Opportunities
+
+GiveReady now includes enrichment endpoints that allow community members and agents to contribute missing data:
+
+- **GET /api/needs-enrichment** — discover nonprofits with incomplete profiles
+- **POST /api/enrich/{slug}** — submit verified data to complete profiles
+- **GET /api/enrichments/stats** — view the enrichment leaderboard
+
+Agents can identify gaps in nonprofit data and help fill them, improving the quality of the entire registry.

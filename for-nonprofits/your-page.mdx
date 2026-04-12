@@ -8,23 +8,25 @@ description: How your GiveReady donation page works
 Every nonprofit on GiveReady gets a dedicated donation page at:
 
 ```
-https://giveready.org/donate/your-charity-slug
+https://giveready.org/donate/your-nonprofit-slug
 ```
 
 ## What Donors See
 
-Your page displays your charity's mission, programmes, impact metrics, and a donate button. Donors can send USDC using:
+Your page displays your nonprofit's mission, programmes, impact metrics, and a donate button. Donors can send USDC using:
 
 - **QR code** — scan with Phantom or Coinbase Wallet
 - **Wallet deeplink** — opens the donor's mobile wallet directly
 - **Copy address** — for manual transfers from any Solana wallet
+
+Coming soon: Credit card and bank transfer options via MoonPay and other payment methods.
 
 ## What AI Agents See
 
 The same data that appears on your donation page is available as structured JSON through the API:
 
 ```bash
-curl https://giveready.org/api/nonprofits/your-charity-slug
+curl https://giveready.org/api/nonprofits/your-nonprofit-slug
 ```
 
 This returns your full profile — mission, programmes, impact metrics, registrations, and wallet address — in a format any AI agent can parse and recommend.
@@ -45,8 +47,8 @@ GiveReady also provides an embeddable donate widget you can add to your own webs
 
 ```html
 <script src="https://giveready.org/widget/donate.js"
-        data-nonprofit="your-charity-slug">
+        data-nonprofit="your-nonprofit-slug">
 </script>
 ```
 
-This adds a donate button to any page. When clicked, it generates a Solana Pay QR code or deeplink for the donor's wallet. Zero dependencies, 21KB.
+This adds a donate button to any page. When clicked, it generates a Solana Pay QR code or deeplink for the donor's wallet. Zero dependencies, 21KB. Credit card and bank transfer options will be added to this widget as they become available.

@@ -5,7 +5,7 @@ description: MCP tools exposed by the GiveReady server
 
 # Available Tools
 
-The GiveReady MCP server exposes 3 tools and 1 resource.
+The GiveReady MCP server exposes 5 tools. Verify the live list at [`https://giveready.org/mcp`](https://giveready.org/mcp) — that endpoint is the source of truth.
 
 ## search_nonprofits
 
@@ -33,7 +33,7 @@ Agent: "Find nonprofits working on mental health in South Africa"
 
 ### Available Countries
 
-`South Africa`, `United Kingdom`, `Bermuda` (growing)
+`South Africa`, `United Kingdom`, `Bermuda`, `United States` (growing)
 
 ---
 
@@ -71,8 +71,50 @@ Agent: "What cause areas does GiveReady cover?"
 
 ---
 
-## Resource: directory-stats
+## donate_to_nonprofit
 
-URI: `giveready://stats`
+Initiate a USDC donation to a nonprofit via the x402 HTTP payment protocol. Returns the payment instructions — the client still needs to sign and broadcast the Solana transaction.
 
-Returns directory statistics: total nonprofits, countries, causes, beneficiaries, and query volume by discovery channel.
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `slug` | string | Yes | The nonprofit's URL slug |
+| `amount_usdc` | number | Yes | Donation amount in USDC |
+| `note` | string | No | Optional memo attached to the donation |
+
+### Example
+
+```
+Agent: "Donate $25 to the Finn Wardman World Explorer Fund"
+→ donate_to_nonprofit({slug: "finn-wardman-world-explorer-fund", amount_usdc: 25})
+```
+
+Returns x402 payment instructions including the destination wallet address and recommended network (`solana:*`). See [For AI Agents → Donating](/for-agents/donating) for the full flow.
+
+---
+
+## get_donation_history
+
+Fetch the recent donation history for a nonprofit. Useful for verifying a donation landed, or for showing a user the organisation's traction.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `slug` | string | Yes | The nonprofit's URL slug |
+
+### Example
+
+```
+Agent: "Show me recent donations to City Kids Surfing"
+→ get_donation_history({slug: "city-kids-surfing"})
+```
+
+Returns: `donation_count`, `total_donated_usdc`, and `recent_donations` (each with amount, network, tx_hash, status, timestamps).
+
+---
+
+## Note on submit_enrichment
+
+The npm package [`giveready-mcp`](https://www.npmjs.com/package/giveready-mcp) that you install locally via `npx giveready-mcp` also exposes a `submit_enrichment` tool for the write-back API documented at [API Reference → Enrichment](/api/enrichment). The HTTP `/mcp` endpoint served from `giveready.org` is the discovery manifest for remote clients and does not currently expose `submit_enrichment`. If you want write access over MCP, install the npm package.

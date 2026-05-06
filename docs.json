@@ -57,7 +57,8 @@
               "api/nonprofits",
               "api/causes",
               "api/donations",
-              "api/stats"
+              "api/stats",
+              "api/enrichment"
             ]
           }
         ]

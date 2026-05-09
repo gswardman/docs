@@ -53,6 +53,7 @@
             "group": "API Reference",
             "pages": [
               "api/overview",
+              "api/recommend",
               "api/search",
               "api/nonprofits",
               "api/causes",
@@ -84,6 +85,7 @@
             "group": "For AI Agents",
             "pages": [
               "for-agents/discovery",
+              "for-agents/arazzo",
               "for-agents/verification",
               "for-agents/donating",
               "for-agents/safety"

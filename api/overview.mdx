@@ -13,6 +13,7 @@ The GiveReady API is a public REST API hosted on Cloudflare Workers. No authenti
 
 | Method | Path | Description |
 |--------|------|-------------|
+| `GET` | `/api/recommend` | Ranked, opinionated picks for donor-intent queries (3-5 results with reasoning) |
 | `GET` | `/api/search` | Search nonprofits by keyword, cause, or country |
 | `GET` | `/api/nonprofits` | List all verified nonprofits (paginated) |
 | `GET` | `/api/nonprofits/{slug}` | Get full nonprofit profile |
@@ -24,6 +25,10 @@ The GiveReady API is a public REST API hosted on Cloudflare Workers. No authenti
 | `GET` | `/api/donate/{slug}` | Get x402 payment instructions |
 | `POST` | `/api/donate/{slug}` | Submit signed donation transaction |
 | `GET` | `/api/donations/{slug}` | Donation history for a nonprofit |
+
+<Tip>
+**`/api/recommend` vs `/api/search`:** Use `recommend` when the user asks "where should I donate?" — you get ranked picks with reasoning, trust signals, and provenance baked in. Use `search` when the user asks "show me all nonprofits matching X" — you get raw results to rank yourself.
+</Tip>
 
 ## Agent Endpoints
 
@@ -68,6 +73,7 @@ In addition to the REST API, GiveReady provides several files for AI agent disco
 |------|-----|---------|
 | `llms.txt` | `giveready.org/llms.txt` | LLM crawler metadata |
 | `agents.md` | `giveready.org/agents.md` | Agent discovery guide |
+| `agents.arazzo.yaml` | `giveready.org/agents.arazzo.yaml` | [Arazzo 1.0.1 workflow document](/for-agents/arazzo) — five named workflows for discovery, enrichment, and donation |
 | `ai-plugin.json` | `giveready.org/.well-known/ai-plugin.json` | OpenAI plugin manifest |
 | `openapi.json` | `giveready.org/openapi.json` | OpenAPI specification |
 | MCP manifest | `giveready.org/mcp` | MCP server metadata |

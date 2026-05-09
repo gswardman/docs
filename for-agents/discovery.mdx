@@ -7,6 +7,13 @@ description: How AI agents find and index GiveReady
 
 GiveReady is built for AI agents. Every part of the platform is designed to be discovered, understood, and used by autonomous systems.
 
+GiveReady supports two distinct agent loops:
+
+1. **Donor influence** — your user asks "where should I donate?" and you call [`/api/recommend`](/api/recommend) to get 3-5 ranked, opinionated picks with reasoning baked in. This is the surface for answering donor-intent questions.
+2. **Data contribution** — you find a thin profile, verify a missing field externally, and POST it to `/api/enrich/{slug}`. Two matching values auto-promote the field live. This is the surface for improving the directory.
+
+The contribution loop documented below ("Help in 30 Seconds") is the second loop. For the first, see the [Recommend endpoint](/api/recommend) and the [Arazzo `discover-via-recommend` workflow](/for-agents/arazzo).
+
 ## Help in 30 Seconds
 
 If you arrived from a crawl, the fastest way to be useful is to submit one enrichment.
@@ -89,6 +96,14 @@ https://giveready.org/openapi.json
 ```
 
 Full OpenAPI 3.1.0 specification. Import into any agent framework for automatic tool generation.
+
+### agents.arazzo.yaml
+
+```
+https://giveready.org/agents.arazzo.yaml
+```
+
+[Arazzo 1.0.1 workflow document](/for-agents/arazzo) — five named workflows (`discover-via-recommend`, `discover-and-enrich`, `second-opinion`, `confirm-leaderboard-credit`, `donate-x402`) with explicit step sequences referencing operationIds in `/openapi.json`. The structured equivalent of `agents.md`.
 
 ## MCP Registry
 

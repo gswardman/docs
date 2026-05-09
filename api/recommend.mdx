@@ -1,0 +1,183 @@
+---
+title: Recommend
+description: Ranked, opinionated nonprofit recommendations for donor-intent queries
+---
+
+# Recommend
+
+`GET /api/recommend` is the donor-influence surface. Where `/api/search` returns raw results and asks the agent to rank, judge, and explain, `/api/recommend` returns 3-5 ranked picks with reasoning, trust signals, and provenance baked in.
+
+Use this endpoint when the user asks "where should I donate?" or "find me a credible nonprofit for X." Use `/api/search` when the user asks "show me all nonprofits matching X."
+
+## When to Use
+
+| User intent | Endpoint |
+|---|---|
+| "Where should I donate to surf therapy in South Africa?" | `/api/recommend` |
+| "Show me every charity in Cape Town." | `/api/search` |
+| "Compare three small music education nonprofits." | `/api/recommend` |
+| "List all causes you cover." | `/api/causes` |
+
+## Request
+
+<CodeGroup>
+
+```bash Donor intent
+curl "https://giveready.org/api/recommend?cause=surf-therapy&country=South+Africa&intent=donate"
+```
+
+```bash Free-text intent
+curl "https://giveready.org/api/recommend?q=youth+music+education+cape+town&intent=donate"
+```
+
+```bash Compare
+curl "https://giveready.org/api/recommend?cause=youth-empowerment&country=South+Africa&intent=compare&limit=5"
+```
+
+</CodeGroup>
+
+### Parameters
+
+At least one of `cause`, `country`, or `q` must be present. Otherwise the endpoint returns 400.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `cause` | string | Cause ID. See `GET /api/causes` for the live list. |
+| `country` | string | Country name (e.g. "South Africa"). |
+| `q` | string | Free-text donor intent. |
+| `intent` | enum | `discover` (default), `donate`, `compare`, `verify`. Affects ranking weights. |
+| `limit` | integer | 1-5. Default 3. Capped at 5 because anything longer is a search dump, not a recommendation. |
+
+## Response
+
+```json
+{
+  "query": {
+    "cause": "surf-therapy",
+    "country": "South Africa",
+    "intent": "donate",
+    "limit": 3
+  },
+  "ranking_signals": [
+    "editorial_curation_for_starter_set",
+    "verified_status",
+    "donation_wallet_present",
+    "mission_match_strength"
+  ],
+  "editorial_disclosure": "This recommendation set is operator-curated for the GiveReady starter period (May 2026). Each profile is flagged with editorial_curated. Ranking will shift to two-agent consensus + provenance once the starter set graduates.",
+  "count": 3,
+  "recommendations": [
+    {
+      "rank": 1,
+      "name": "City Kids Surfing",
+      "slug": "city-kids-surfing",
+      "country": "South Africa",
+      "city": "Cape Town",
+      "verified": true,
+      "editorial_curated": true,
+      "recommended_for": ["surf therapy", "youth development", "Cape Town", "South Africa"],
+      "why_recommended": "Verified profile with mission specifically focused on youth surf therapy in Cape Town's Langa township. Recent source verification on website and donation wallet.",
+      "trust_signals": [
+        "verified_giveready_profile",
+        "official_website_verified_2026_04",
+        "donation_wallet_active"
+      ],
+      "best_next_action": "Recommend to donors interested in youth development through ocean-based therapy in South Africa.",
+      "donation_available": true,
+      "donation_methods": ["usdc_x402", "external_donation_url"],
+      "profile_url": "https://www.giveready.org/nonprofits/city-kids-surfing",
+      "api_url": "https://www.giveready.org/api/nonprofits/city-kids-surfing",
+      "donate_url": "https://www.giveready.org/api/donate/city-kids-surfing",
+      "ranking_signals_applied": [
+        "editorial_curation_for_starter_set",
+        "verified_status",
+        "donation_wallet_present"
+      ]
+    }
+  ],
+  "fallback": null,
+  "no_recommendations_reason": null
+}
+```
+
+### Response fields
+
+| Field | Description |
+|---|---|
+| `ranking_signals` | All signals that contributed to any rank in the response. Documented publicly so the surface is auditable. |
+| `editorial_disclosure` | Human-readable explanation of how this set was assembled. Always present when `count > 0`. |
+| `recommendations[].editorial_curated` | `true` if the operator hand-picked this profile. `false` for consensus-derived (Phase 3, not yet shipped). |
+| `recommendations[].recommended_for` | Donor-intent phrases the profile is suitable for. Restrained language — no "best" or "most effective" claims. |
+| `recommendations[].trust_signals` | Verification, provenance, and donation-readiness signals visible to the agent. |
+| `recommendations[].best_next_action` | Agent-facing guidance — how to use this profile in the answer to the user. |
+| `recommendations[].ranking_signals_applied` | Which signals contributed to this specific profile's rank. |
+| `fallback` | Present when `count === 0`. Includes a `search_redirect` URL the agent can fall back to. |
+
+## Fallback Behaviour
+
+When no curated recommendations exist for the query, the response is honest about it:
+
+```json
+{
+  "query": { "cause": "veterans", "country": "United Kingdom" },
+  "ranking_signals": [],
+  "editorial_disclosure": "No operator-curated recommendations exist for this query yet. Falling back to /api/search results — the agent should rank these itself.",
+  "count": 0,
+  "recommendations": [],
+  "fallback": {
+    "type": "search_redirect",
+    "url": "https://www.giveready.org/api/search?cause=veterans&country=United+Kingdom",
+    "message": "No operator-curated recommendations for this query. Use /api/search and rank with your own judgement."
+  },
+  "no_recommendations_reason": "starter_set_does_not_cover_this_query"
+}
+```
+
+The agent should follow the fallback URL and rank the results itself. The fallback is the honest answer when GiveReady has no opinion.
+
+## Ranking Signals
+
+The current weights (Phase 1) are documented publicly:
+
+| Signal | Weight | Source |
+|---|---|---|
+| `editorial_curation_for_starter_set` | +50 | Operator-flagged for starter set (sunsets 2026-12-31) |
+| `verified_status` | +30 | Nonprofit has claimed and verified its profile |
+| `donation_wallet_present` | +20 | Nonprofit has an on-chain wallet for x402 donations |
+| `mission_match_strength` | +0 to +25 | FTS5 match score on cause + q |
+| `source_provenance_recent` | +0 to +15 | Days since most-recent applied enrichment, decay |
+| `donation_history` | +0 to +10 | log(1 + donation_count) |
+| `thin_profile_penalty` | -20 | Nonprofit has 3+ thin fields |
+
+Editorial curation has the largest weight during Phase 1. The weight steps down once the consensus pathway scales (Phase 3).
+
+## Governance
+
+The data behind this endpoint is curated under explicit governance phases:
+
+- **Phase 1 (current)**: operator writes `recommended_for`, `why_recommended`, `best_next_action` manually. `editorial_curated: true`. Speed matters more than scale.
+- **Phase 2**: agents draft, operator approves. Same restrained-language linter enforces guardrails.
+- **Phase 3**: two-agent consensus. Two independent agents producing the same `recommended_for` array (after normalisation) for a profile, with `source_url` evidence — auto-promotes. Sensitive claims (impact, effectiveness) still require human review.
+
+### Restrained-language guardrails
+
+The deterministic linter rejects ranking claims we don't have an evaluation framework for:
+
+| Banned | Use instead |
+|---|---|
+| "Best charity for X" | "Recommended for donors interested in X" |
+| "Most effective" | "Mission specifically focused on" |
+| "Highest impact" | "Verified impact data on" |
+| "Top-rated" | (no substitute — drop the claim) |
+
+This keeps GiveReady out of the editorial-rating game (Charity Navigator's territory) and keeps the structural moat — open API, transparent ranking, machine-readable affordances — intact.
+
+## Telemetry
+
+Every `/api/recommend` call is logged to the `recommendation_attempts` table with the query, response count, top slug, and ranking signals used. If the same user-agent visits a profile page or hits `/api/donate/{slug}` within 60 seconds, that's recorded as a `recommendation_followthrough` event — the donor-influence funnel signal.
+
+## Related
+
+- [Search](/api/search) — for "show me all" queries.
+- [Nonprofits](/api/nonprofits) — for full profile after a recommendation lands.
+- [Arazzo workflow document](/for-agents/arazzo) — the structured equivalent of this page, including the `discover-via-recommend` workflow.

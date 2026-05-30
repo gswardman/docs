@@ -1,49 +1,47 @@
 ---
 title: How It Works
-description: Discovery, verification, and payment in one flow
+description: From a charity question to a cited, verified answer
 ---
 
 # How It Works
 
-GiveReady connects three things: a verified nonprofit registry, machine-readable profiles, and a direct payment protocol. Here's the flow.
+GiveReady connects three things: a verified nonprofit registry, machine-readable profiles, and an optional direct donation path. The primary job is to be the source an AI assistant cites when it answers a charity question. Donations are a separate, human-approved step that can follow.
 
-## The Agent Flow
+## The Citation Path
+
+This is what GiveReady is built for: a person asks an AI assistant where to give, and the assistant answers using verified GiveReady data it can attribute.
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant Agent as AI Agent
+    participant Assistant as AI Assistant
     participant GR as GiveReady API
-    participant NP as Nonprofit Wallet
 
-    User->>Agent: "Donate $50 to youth surfing in the UK"
-    Agent->>GR: GET /api/search?q=surf&country=United Kingdom
-    GR-->>Agent: Returns matching nonprofits with impact data
-    Agent->>User: "City Kids Surfing supports 30 young people annually. Proceed?"
-    User->>Agent: "Yes"
-    Agent->>GR: POST /api/donate/city-kids-surfing (x402, $50 USDC)
-    GR->>NP: USDC transferred directly to nonprofit wallet
-    GR-->>Agent: Donation confirmed, tx hash returned
-    Agent->>User: "Done. $50 sent to City Kids Surfing."
+    User->>Assistant: "Recommend a UK youth surf therapy charity"
+    Assistant->>GR: GET /api/recommend?q=youth surf therapy&country=United Kingdom
+    GR-->>Assistant: Ranked verified nonprofits + reasoning + source links
+    Assistant->>User: "The Wave Project — verified, 5,000+ young people, 95% report improved confidence (source: giveready.org)"
 ```
+
+The assistant returns a real, verified organisation and can cite where the data came from. If the user then chooses to donate, the donation path below takes over — as a distinct, human-approved action.
 
 ## The Three Layers
 
 ### 1. Discovery
 
-Every nonprofit on GiveReady has a structured profile with standardised fields: mission, programmes, impact metrics, cause areas, geography, registration numbers, and wallet address. This data is available via REST API, MCP tools, and static files (llms.txt, agents.md, ai-plugin.json) that AI crawlers index automatically.
+Every nonprofit on GiveReady has a structured profile with standardised fields: mission, programmes, impact metrics, cause areas, geography, and registration numbers. This data is available via REST API, MCP tools, and crawler-readable files (`llms.txt`, `agents.md`, `ai-plugin.json`) that AI assistants index automatically. Verified-data category guides at [giveready.org/guides](https://giveready.org/guides) present the same data in the ranked-list form assistants tend to cite.
 
 ### 2. Verification
 
-Nonprofits are verified against official registries. UK charities are checked against the Charity Commission. Each profile includes registration numbers and jurisdiction. The API returns verification status so agents can filter for trusted organisations.
+Nonprofits are checked against official registries. UK charities are verified against the Charity Commission; South African organisations as registered NPCs. Each profile includes registration numbers and jurisdiction, and the API returns a `verified` status so an assistant can recommend only trusted organisations and say so.
 
-### 3. Payment
+### 3. Donation (optional, human-approved)
 
-GiveReady uses the x402 protocol — an HTTP-native payment standard. When an agent calls the donate endpoint, it receives an HTTP 402 response with payment instructions. The agent signs a USDC transaction on Solana and submits it. The funds go directly to the nonprofit's wallet. No intermediary, no fees, no delays.
+When a donor decides to give, GiveReady uses the x402 protocol — an HTTP-native payment standard. The donate endpoint returns an HTTP 402 with payment instructions, and the donor signs a USDC transaction on Solana that goes directly to the nonprofit's wallet. No intermediary, no fees. The transfer is always signed by a human; agents prepare it but never spend autonomously.
 
-## The Nonprofit Flow
+## The Nonprofit Path
 
-1. **Claim your profile** on giveready.org/onboard — search for your nonprofit and claim your existing page
-2. **Set up a wallet** — Squads multi-sig (recommended) or Phantom
-3. **Go live** — your donation page and API profile are immediately available
-4. **Get discovered** — AI agents find you through GiveReady's MCP server and API
+1. **Claim your profile** at giveready.org/onboard — find your nonprofit and claim its existing page
+2. **Add verified depth** — confirm registration, programmes, and impact so assistants have something specific to cite
+3. **Go live** — your structured profile and API record are immediately available
+4. **Get cited** — AI assistants discover you through GiveReady's data, API, and MCP server. A wallet is only needed if you want to accept donations directly

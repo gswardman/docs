@@ -11,9 +11,14 @@ GiveReady verifies nonprofits against official registries so agents can trust th
 
 Every nonprofit on GiveReady goes through a verification process:
 
-**Registration check.** UK charities are verified against the Charity Commission register. Bermuda entities are checked against the Bermuda Community Foundation. Each profile includes the registration type and number.
+**Registration check.** US organisations are checked against the IRS Business Master File by EIN, including the IRS revocation list, so an organisation that has lost its exempt status is flagged rather than silently recommended. UK charities are verified against the Charity Commission register. Bermuda entities are checked against the Bermuda Community Foundation. Each profile includes the registration type and number.
 
-**Profile completeness.** Verified nonprofits have a complete profile: mission, programmes, impact metrics, contact information, and wallet address.
+**Profile completeness.** Verified nonprofits have a complete profile: mission, programmes, impact metrics and contact information.
+
+A wallet address is **not** part of verification and is not required for it. Verification is a
+statement about an organisation's registration and profile, not about how it receives money.
+Most verified organisations have no wallet bound and are donated to through their existing
+donation URL; `GET /api/donate/{slug}` redirects there when no wallet is present.
 
 **Wallet binding.** Wallets are bound to the legal entity. Agents can confirm that a donation will reach the registered charity, not an unrelated account.
 
@@ -40,8 +45,15 @@ Agents should check `verified: true` before recommending a nonprofit for donatio
 
 | Level | Meaning |
 |-------|---------|
-| `verified: true` | Profile verified, registration confirmed, wallet bound |
-| `verified: false` | Profile submitted but awaiting admin review |
+| `verified: true` | Registration confirmed against an official registry and profile reviewed. Does not imply a wallet is bound. |
+| `verified: false` | Not yet reviewed. Most of the directory sits here: it is bulk-imported registry data, not a claimed or checked profile. |
+
+<Warning>
+`verified: false` is the default state for the great majority of the directory, because
+GiveReady imports openly available registry data at scale and verifies a much smaller core by
+hand. As of 2026-09-05 that is 177 verified out of 41,227. Treat `verified: false` as
+"unreviewed", not as "suspect".
+</Warning>
 
 ## Agent Safety Rules
 

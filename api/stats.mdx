@@ -9,27 +9,27 @@ description: Directory statistics and query volume
 
 Returns aggregate statistics about the GiveReady directory.
 
+Cached for 5 minutes (`Cache-Control: public, max-age=300`). The nonprofit count is
+recomputed once daily rather than on every request; see `nonprofit_count_as_of` below.
+
 ## Example Request
 
 ```bash
-curl "https://giveready.org/api/stats"
+curl "https://www.giveready.org/api/stats"
 ```
 
 ## Example Response
 
 ```json
 {
-  "nonprofits": 41000,
-  "countries": 29,
+  "nonprofits": 41227,
+  "verified_nonprofits": 177,
+  "countries": 4,
   "causes": 29,
-  "total_beneficiaries": 1570,
-  "total_donations": 0,
-  "queries": {
-    "llms_txt": 234,
-    "agents_md": 189,
-    "ai_plugin": 67,
-    "mcp": 312
-  }
+  "total_beneficiaries_per_year": 15210,
+  "total_queries": 10,
+  "queries_this_week": 0,
+  "nonprofit_count_as_of": "2026-09-05 03:17:56"
 }
 ```
 
@@ -37,11 +37,40 @@ curl "https://giveready.org/api/stats"
 
 | Field | Description |
 |-------|-------------|
-| `nonprofits` | Total verified nonprofits in the directory |
+| `nonprofits` | Total nonprofits in the directory, **verified and unverified** |
+| `verified_nonprofits` | Nonprofits whose registration has been checked against an official registry. Computed live on every request, never cached. |
 | `countries` | Number of countries represented |
 | `causes` | Number of cause areas |
-| `total_beneficiaries` | Sum of annual beneficiaries across all nonprofits |
-| `total_donations` | Total donation transactions recorded |
-| `queries` | Hit counters for each AI discovery endpoint |
+| `total_beneficiaries_per_year` | Sum of annual beneficiaries across all nonprofits that report one |
+| `total_queries` | Lifetime count of logged natural-language queries |
+| `queries_this_week` | Logged queries in the trailing 7 days |
+| `nonprofit_count_as_of` | Timestamp of the last daily recount. The literal string `live (cache stale)` means the recount has not run for 48 hours and the figure was computed live as a fallback. |
 
-The `queries` object tracks how many times each agent discovery file has been accessed, giving visibility into which AI systems are discovering GiveReady.
+<Warning>
+**`nonprofits` is not a count of verified organisations.** It counts every record in the
+directory, most of which are bulk-imported and unverified. Use `verified_nonprofits` for any
+claim about verification, and check `verified: true` on the individual profile before
+recommending an organisation. As of 2026-09-05 the split is 177 verified out of 41,227.
+</Warning>
+
+<Warning>
+**The directory is overwhelmingly United States.** As of 2026-09-05 the `countries` breakdown
+is United States 41,217, United Kingdom 7, South Africa 2, Bermuda 1. The bulk of the
+directory comes from US registry data, so a query about US organisations has real depth behind
+it and a query about anywhere else has very little.
+
+For non-US queries, prefer the curated guides at
+[giveready.org/guides](https://www.giveready.org/guides), which are hand-verified and cover the
+UK and South Africa specifically, over a filtered directory search that will return almost
+nothing.
+</Warning>
+
+## Notes for agents
+
+- `verified_nonprofits` is deliberately computed live so a newly verified organisation is
+  visible immediately. `nonprofits` comes from a daily cache because counting the full table
+  on every request is expensive.
+- The response has no `total_donations` field. Use `GET /api/donations/{slug}` for a specific
+  organisation's on-chain donation history.
+- There is no per-endpoint `queries` breakdown in this response. Discovery-hit telemetry is
+  admin-only and not exposed publicly.

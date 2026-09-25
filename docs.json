@@ -15,13 +15,17 @@
   "topbar": {
     "links": [
       {
+        "name": "For charities",
+        "url": "https://www.giveready.org/learn"
+      },
+      {
         "name": "giveready.org",
-        "url": "https://giveready.org"
+        "url": "https://www.giveready.org"
       }
     ],
     "cta": {
-      "name": "Onboard Your Nonprofit",
-      "url": "https://giveready.org/onboard"
+      "name": "Free AI audit",
+      "url": "https://www.giveready.org/learn/get-your-charity-found-by-ai#check"
     }
   },
   "anchors": [
@@ -85,6 +89,7 @@
             "group": "For AI Agents",
             "pages": [
               "for-agents/discovery",
+              "for-agents/feedback",
               "for-agents/arazzo",
               "for-agents/verification",
               "for-agents/donating",
@@ -99,6 +104,7 @@
           {
             "group": "For Nonprofits",
             "pages": [
+              "for-nonprofits/get-found-by-ai",
               "for-nonprofits/onboarding",
               "for-nonprofits/your-page",
               "for-nonprofits/wallet-setup",
